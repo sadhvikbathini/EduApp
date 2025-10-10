@@ -1,96 +1,3 @@
-//package com.example.eduapp;
-//
-//import androidx.appcompat.app.AppCompatActivity;
-//import android.os.Bundle;
-//import android.view.View;
-//import android.widget.*;
-//import org.json.JSONObject;
-//import java.io.IOException;
-//import okhttp3.*;
-//
-//public class ChatBotActivity extends AppCompatActivity {
-//
-//    EditText userInput;
-//    TextView chatResponse;
-//    Button sendBtn;
-//
-//    private static final String GEMINI_API_KEY = "AIzaSyAE8Jbd_n1UQ4LNrDIcx3-LeET6cINJ-lc"; // replace
-//    private static final String GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + GEMINI_API_KEY;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_chatbot);
-//
-//        userInput = findViewById(R.id.userInput);
-//        chatResponse = findViewById(R.id.chatResponse);
-//        sendBtn = findViewById(R.id.sendBtn);
-//
-//        sendBtn.setOnClickListener(v -> {
-//            String input = userInput.getText().toString();
-//            if (!input.isEmpty()) {
-//                getGeminiResponse(input);
-//            }
-//        });
-//    }
-//
-//    private void getGeminiResponse(String query) {
-//        OkHttpClient client = new OkHttpClient();
-//
-//        JSONObject content = new JSONObject();
-//        try {
-//            JSONObject part = new JSONObject();
-//            part.put("text", query);
-//
-//            JSONObject contentObj = new JSONObject();
-//            contentObj.put("parts", new org.json.JSONArray().put(part));
-//
-//            content.put("contents", new org.json.JSONArray().put(contentObj));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        RequestBody body = RequestBody.create(
-//                content.toString(),
-//                MediaType.parse("application/json")
-//        );
-//
-//        Request request = new Request.Builder()
-//                .url(GEMINI_URL)
-//                .post(body)
-//                .build();
-//
-//        client.newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                runOnUiThread(() -> chatResponse.setText("Error: " + e.getMessage()));
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                if (response.isSuccessful()) {
-//                    try {
-//                        String res = response.body().string();
-//                        JSONObject json = new JSONObject(res);
-//                        String text = json
-//                                .getJSONArray("candidates")
-//                                .getJSONObject(0)
-//                                .getJSONObject("content")
-//                                .getJSONArray("parts")
-//                                .getJSONObject(0)
-//                                .getString("text");
-//
-//                        runOnUiThread(() -> chatResponse.setText(text.trim()));
-//                    } catch (Exception e) {
-//                        runOnUiThread(() -> chatResponse.setText("Parsing error: " + e.getMessage()));
-//                    }
-//                } else {
-//                    runOnUiThread(() -> chatResponse.setText("Error: " + response.message()));
-//                }
-//            }
-//        });
-//    }
-//}
 package com.example.eduapp;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -98,6 +5,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
 import okhttp3.*;
@@ -109,8 +17,22 @@ public class ChatBotActivity extends AppCompatActivity {
     private EditText userInput;
     private Button sendBtn;
 
-    private static final String GEMINI_API_KEY = "AIzaSyAE8Jbd_n1UQ4LNrDIcx3-LeET6cINJ-lc"; // Replace with your key
-    private static final String GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/text-bison-001:generateMessage?key=" + GEMINI_API_KEY;
+    private static final String GEMINI_API_KEY = "";
+    private static final String BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models/";
+
+    // Common Gemini models to try
+    private static final String[] MODELS_TO_TRY = {
+            "gemini-1.5-flash",
+            "gemini-2.5-flash",
+            "gemini-1.0-pro",
+            "gemini-2.0-pro",
+            "gemini-flash-latest",
+            "gemini-pro",
+            "gemini-2.5-pro",
+            "text-bison-001"  // Fallback to older PaLM model
+    };
+
+    private String currentWorkingModel = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,41 +44,102 @@ public class ChatBotActivity extends AppCompatActivity {
         userInput = findViewById(R.id.userInput);
         sendBtn = findViewById(R.id.sendBtn);
 
+        // First, detect which models are available
+        addMessageToChat("Detecting available models...", false);
+        detectAvailableModels();
+
         sendBtn.setOnClickListener(v -> {
             String question = userInput.getText().toString().trim();
             if (!question.isEmpty()) {
-                addMessageToChat(question, true); // User message
+                addMessageToChat(question, true);
                 userInput.setText("");
-                getGeminiResponse(question);
+                if (currentWorkingModel != null) {
+                    getGeminiResponse(question);
+                } else {
+                    addMessageToChat("No working model found. Please check your API key.", false);
+                }
             }
         });
     }
 
-    private void getGeminiResponse(String query) {
+    private void detectAvailableModels() {
         OkHttpClient client = new OkHttpClient();
 
+        // Test each model
+        for (String model : MODELS_TO_TRY) {
+            String testUrl = BASE_URL + model + "?key=" + GEMINI_API_KEY;
+
+            Request request = new Request.Builder()
+                    .url(testUrl)
+                    .get()
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    runOnUiThread(() -> addMessageToChat("Failed to check model: " + model, false));
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        runOnUiThread(() -> {
+                            if (currentWorkingModel == null) {
+                                currentWorkingModel = model;
+                                addMessageToChat("✓ Using model: " + model, false);
+                                addMessageToChat("Ready! Type your message below.", false);
+                            }
+                        });
+                    } else {
+                        runOnUiThread(() -> addMessageToChat("✗ Model not available: " + model, false));
+                    }
+                }
+            });
+        }
+    }
+
+    private void getGeminiResponse(String query) {
+        if (currentWorkingModel == null) {
+            addMessageToChat("No working model available. Please check your API key.", false);
+            return;
+        }
+
+        OkHttpClient client = new OkHttpClient();
+        String apiUrl = BASE_URL + currentWorkingModel + ":generateContent?key=" + GEMINI_API_KEY;
+
         try {
-            JSONObject message = new JSONObject();
-            message.put("author", "user");
+            JSONObject requestBody = new JSONObject();
 
-            JSONObject textPart = new JSONObject();
-            textPart.put("type", "text");
-            textPart.put("text", query);
+            if (currentWorkingModel.startsWith("text-bison")) {
+                // Use PaLM API format for text-bison
+                requestBody.put("prompt", new JSONObject().put("text", query));
+                requestBody.put("temperature", 0.7);
+                requestBody.put("maxOutputTokens", 512);
+            } else {
+                // Use Gemini API format
+                JSONObject textPart = new JSONObject();
+                textPart.put("text", query);
 
-            message.put("content", new org.json.JSONArray().put(textPart));
+                JSONObject contentItem = new JSONObject();
+                contentItem.put("parts", new JSONArray().put(textPart));
 
-            JSONObject content = new JSONObject();
-            content.put("messages", new org.json.JSONArray().put(message));
-            content.put("temperature", 0.7);
+                requestBody.put("contents", new JSONArray().put(contentItem));
+
+                JSONObject generationConfig = new JSONObject();
+                generationConfig.put("temperature", 0.7);
+                generationConfig.put("maxOutputTokens", 512);
+                requestBody.put("generationConfig", generationConfig);
+            }
 
             RequestBody body = RequestBody.create(
-                    content.toString(),
-                    MediaType.parse("application/json")
+                    requestBody.toString(),
+                    MediaType.parse("application/json; charset=utf-8")
             );
 
             Request request = new Request.Builder()
-                    .url(GEMINI_URL)
+                    .url(apiUrl)
                     .post(body)
+                    .addHeader("Content-Type", "application/json")
                     .build();
 
             client.newCall(request).enqueue(new Callback() {
@@ -167,51 +150,69 @@ public class ChatBotActivity extends AppCompatActivity {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        try {
-                            String res = response.body().string();
-                            JSONObject json = new JSONObject(res);
-                            // Parse response text
-                            String text = json.getJSONArray("candidates")
-                                    .getJSONObject(0)
-                                    .getJSONObject("content")
-                                    .getJSONArray("text")
-                                    .getString(0);
+                    String responseBody = response.body().string();
+                    runOnUiThread(() -> {
+                        if (response.isSuccessful()) {
+                            try {
+                                JSONObject json = new JSONObject(responseBody);
+                                String text;
 
-                            runOnUiThread(() -> addMessageToChat(text.trim(), false)); // Bot message
-                        } catch (Exception e) {
-                            runOnUiThread(() -> addMessageToChat("Parsing error: " + e.getMessage(), false));
+                                if (currentWorkingModel.startsWith("text-bison")) {
+                                    // Parse PaLM response
+                                    text = json.getJSONArray("candidates")
+                                            .getJSONObject(0)
+                                            .getString("output");
+                                } else {
+                                    // Parse Gemini response
+                                    text = json.getJSONArray("candidates")
+                                            .getJSONObject(0)
+                                            .getJSONObject("content")
+                                            .getJSONArray("parts")
+                                            .getJSONObject(0)
+                                            .getString("text");
+                                }
+
+                                addMessageToChat(text.trim(), false);
+                            } catch (Exception e) {
+                                addMessageToChat("Response parsing error: " + e.getMessage(), false);
+                            }
+                        } else {
+                            addMessageToChat("API Error: " + response.code() + ". Trying to find another model...", false);
+                            currentWorkingModel = null;
+                            detectAvailableModels();
                         }
-                    } else {
-                        runOnUiThread(() -> addMessageToChat("API Error: " + response.code() + " " + response.message(), false));
-                    }
+                    });
                 }
             });
 
         } catch (Exception e) {
-            e.printStackTrace();
-            addMessageToChat("Request error: " + e.getMessage(), false);
+            runOnUiThread(() -> addMessageToChat("Request error: " + e.getMessage(), false));
         }
     }
 
     private void addMessageToChat(String message, boolean isUser) {
-        TextView textView = new TextView(this);
-        textView.setText(message);
-        textView.setTextSize(16f);
-        textView.setPadding(16, 12, 16, 12);
-        textView.setBackgroundResource(isUser ? R.drawable.user_bubble : R.drawable.bot_bubble);
+        runOnUiThread(() -> {
+            TextView textView = new TextView(ChatBotActivity.this);
+            textView.setText(message);
+            textView.setTextSize(14f);
+            textView.setPadding(16, 12, 16, 12);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        params.setMargins(8, 8, 8, 8);
-        params.gravity = isUser ? Gravity.END : Gravity.START;
-        textView.setLayoutParams(params);
+            if (isUser) {
+                textView.setBackgroundColor(0xFFE3F2FD);
+            } else {
+                textView.setBackgroundColor(0xFFF5F5F5);
+            }
 
-        chatContainer.addView(textView);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(8, 8, 8, 8);
+            params.gravity = isUser ? Gravity.END : Gravity.START;
+            textView.setLayoutParams(params);
 
-        // Scroll to bottom
-        scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
+            chatContainer.addView(textView);
+            scrollView.post(() -> scrollView.fullScroll(View.FOCUS_DOWN));
+        });
     }
 }
