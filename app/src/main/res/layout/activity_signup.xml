@@ -25,9 +25,7 @@
         android:layout_height="wrap_content"
         android:hint="Full Name"
         android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:background="@android:color/white"
-        android:padding="12dp"
+        style="@style/EditTextStyle"
         android:layout_marginBottom="16dp" />
 
     <EditText
@@ -36,9 +34,7 @@
         android:layout_height="wrap_content"
         android:hint="Email Address"
         android:inputType="textEmailAddress"
-        android:minHeight="48dp"
-        android:background="@android:color/white"
-        android:padding="12dp"
+        style="@style/EditTextStyle"
         android:layout_marginBottom="16dp" />
 
     <EditText
@@ -47,9 +43,7 @@
         android:layout_height="wrap_content"
         android:hint="Password"
         android:inputType="textPassword"
-        android:minHeight="48dp"
-        android:background="@android:color/white"
-        android:padding="12dp"
+        style="@style/EditTextStyle"
         android:layout_marginBottom="32dp" />
 
     <Button
@@ -57,9 +51,6 @@
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:text="Sign Up"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        style="@style/ButtonStyle" />
 
 </LinearLayout>
