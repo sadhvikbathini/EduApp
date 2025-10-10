@@ -33,6 +33,7 @@
         <activity android:name=".GoalSelectionActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".VideoQuizActivity" />
+        <activity android:name=".ChatBotActivity" />
     </application>
 
 </manifest>

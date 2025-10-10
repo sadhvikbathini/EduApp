@@ -1,5 +1,6 @@
 package com.example.eduapp; // your app package name
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -20,6 +21,9 @@ public class VideoQuizActivity extends AppCompatActivity {
     private EditText answerInput;
     private TextView questionText;
 
+    private Button chatWithAIButton;  // 👈 New button reference
+
+
     // A sample YouTube video ID (e.g., a short educational clip)
     private static final String YOUTUBE_VIDEO_ID = "jNQXAC9IVRw"; // Placeholder video ID
 
@@ -37,6 +41,7 @@ public class VideoQuizActivity extends AppCompatActivity {
         submitAnswerButton = findViewById(R.id.btnSubmitAnswer);
         answerInput = findViewById(R.id.answerInput);
         questionText = findViewById(R.id.questionText);
+        chatWithAIButton = findViewById(R.id.btnChatWithAI);  // 👈 Connect button
 
         // 1. Setup the WebView for YouTube playback
         loadYoutubeVideo();
@@ -66,6 +71,11 @@ public class VideoQuizActivity extends AppCompatActivity {
         // **TODO: Implement Timer Logic Here**
         // In a real app, you'd use a Handler/Runnable to hide/show the quizContainer
         // at specific video timestamps (e.g., after 30 seconds).
+
+        chatWithAIButton.setOnClickListener(v -> {
+            Intent intent = new Intent(VideoQuizActivity.this, ChatBotActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void loadYoutubeVideo() {
