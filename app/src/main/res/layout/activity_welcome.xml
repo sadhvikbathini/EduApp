@@ -1,0 +1,51 @@
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:orientation="vertical" android:padding="24dp"-->
+<!--    android:layout_width="match_parent" android:layout_height="match_parent">-->
+
+<!--    <TextView android:text="Welcome to Edu App" android:textSize="24sp"-->
+<!--        android:layout_width="wrap_content" android:layout_height="wrap_content"/>-->
+<!--    <Button android:id="@+id/btnSignIn" android:text="Sign In" android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"/>-->
+<!--    <Button android:id="@+id/btnSignUp" android:text="Sign Up" android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"/>-->
+<!--</LinearLayout>-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:padding="24dp"
+android:gravity="center"
+android:background="@drawable/bg_gradient">
+
+<!-- Title -->
+<!--<TextView-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:text="Welcome to Edu App"-->
+<!--    style="@style/EntryTitleStyle"/>-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to Edu App"
+        style="@style/EntryTitleStyle"
+        android:shadowColor="#80000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3"/>
+
+<!-- Sign In Button -->
+<Button
+    android:id="@+id/btnSignIn"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    android:text="Sign In"
+    style="@style/EntryButtonStyle"/>
+
+<!-- Sign Up Button -->
+<Button
+    android:id="@+id/btnSignUp"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    android:text="Sign Up"
+    style="@style/EntryButtonStyle"/>
+</LinearLayout>

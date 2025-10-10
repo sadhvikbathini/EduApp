@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    tools:context=".SignUpActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Your Account"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="48dp" />
+
+    <EditText
+        android:id="@+id/nameSignup"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:hint="Full Name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:background="@android:color/white"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/emailSignup"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:hint="Email Address"
+        android:inputType="textEmailAddress"
+        android:minHeight="48dp"
+        android:background="@android:color/white"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/passwordSignup"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:background="@android:color/white"
+        android:padding="12dp"
+        android:layout_marginBottom="32dp" />
+
+    <Button
+        android:id="@+id/btnSignup"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

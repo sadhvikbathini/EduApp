@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#EDEDED"
+    tools:context=".VideoQuizActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Interactive Lesson"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="8dp"/>
+
+    <WebView
+        android:id="@+id/youtubeWebView"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@android:color/black"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Watch closely! A question will appear based on the video content below."
+                android:textSize="16sp"
+                android:textColor="#333333"
+                android:paddingBottom="16dp"/>
+
+            <LinearLayout
+                android:id="@+id/quizContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:background="@drawable/rounded_card_background"
+                android:elevation="2dp">
+
+                <TextView
+                    android:id="@+id/questionText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Question loading..."
+                    android:textSize="18sp"
+                    android:textStyle="italic"
+                    android:textColor="#000080"
+                    android:layout_marginBottom="16dp"/>
+
+                <EditText
+                    android:id="@+id/answerInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Type your answer here..."
+                    android:padding="12dp"
+                    android:minHeight="48dp"
+                    android:background="@android:color/white"
+                    android:layout_marginBottom="16dp"/>
+
+                <Button
+                    android:id="@+id/btnSubmitAnswer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Submit Answer"
+                    android:layout_gravity="end"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
