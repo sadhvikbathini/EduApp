@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_study" android:title="Study" android:icon="@drawable/ic_home"/>
+    <item android:id="@+id/nav_batches" android:title="Batches" android:icon="@drawable/ic_layers"/>
+    <item android:id="@+id/nav_test" android:title="Test" android:icon="@drawable/ic_quiz"/>
+    <item android:id="@+id/nav_store" android:title="PW Store" android:icon="@drawable/ic_cart"/>
+    <item android:id="@+id/nav_library" android:title="Library" android:icon="@drawable/ic_library"/>
+</menu>

@@ -32,7 +32,7 @@ public class SignUpActivity extends AppCompatActivity {
                 return;
             }
 
-            Intent intent = new Intent(SignUpActivity.this, GoalSelectionActivity.class);
+            Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
             intent.putExtra("name", name);
             intent.putExtra("email", email);
             intent.putExtra("password", password);
