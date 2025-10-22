@@ -36,6 +36,15 @@ public class VideoQuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_quiz);
 
+        String batchTitle = getIntent().getStringExtra("batch_title");
+        String batchCategory = getIntent().getStringExtra("batch_category");
+
+        if (batchTitle != null) {
+            setTitle(batchTitle); // shows title in the top bar
+        }
+
+        Toast.makeText(this, "Opened: " + batchTitle + " (" + batchCategory + ")", Toast.LENGTH_SHORT).show();
+
         youtubeWebView = findViewById(R.id.youtubeWebView);
         quizContainer = findViewById(R.id.quizContainer);
         submitAnswerButton = findViewById(R.id.btnSubmitAnswer);

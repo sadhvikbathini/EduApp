@@ -70,10 +70,10 @@ public class HomeActivity extends AppCompatActivity {
         // Setup batches list
         List<Batch> sample = createSampleBatches();
         batchAdapter = new BatchAdapter(sample, batch -> {
-            // open detail or show toast
-            // Intent intent = new Intent(MainActivity.this, BatchDetailActivity.class);
-            // intent.putExtra("batch_title", batch.getTitle());
-            // startActivity(intent);
+            Intent intent = new Intent(HomeActivity.this, VideoQuizActivity.class);
+            intent.putExtra("batch_title", batch.getTitle());
+            intent.putExtra("batch_category", batch.getCategory());
+            startActivity(intent);
         });
 
         recyclerBatches.setLayoutManager(new LinearLayoutManager(this));
